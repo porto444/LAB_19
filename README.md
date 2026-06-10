@@ -186,34 +186,6 @@ adb shell am start -n com.pwnsec.snake/.MainActivity -e SNAKE BigBoss
 
 L'écran affiche le message : **"Here's to you Boss 1932-1995"** — l'exploitation est en cours.
 
-### Capture du flag
 
-Le flag est écrit dans les logs Android sous le tag `BigBoss`. On le filtre avec logcat :
 
-```powershell
-adb logcat | Select-String -Pattern "PWNSEC"
-```
 
-Le flag s'affiche au format `PWNSEC{...}`.
-
----
-
-## Récapitulatif technique
-
-```
-APK
- └── Jadx-GUI (analyse statique)
-      └── apktool (décompilation Smali)
-           └── Patch isDeviceRooted() → retourne false
-                └── apktool (recompilation) + uber-apk-signer
-                     └── adb install
-                          └── Payload YAML → /sdcard/snake/Skull_Face.yml
-                               └── Intent : SNAKE=BigBoss
-                                    └── Désérialisation BigBoss("Snaaaaaaaaaaaaaake")
-                                         └── stringFromJNI() → hexToAscii()
-                                              └── logcat → Flag PWNSEC{...}
-```
-
----
-
-*Lab réalisé dans un environnement isolé à des fins pédagogiques.*
